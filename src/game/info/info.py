@@ -19,17 +19,17 @@ def format_deck_info(artifacts_deck, num_card=0):
             return
     for card in artifacts_deck:
         num_card += 1
-        result += format_case(card, component_type)
+        result += format_case(card, num_card)
     return result
 
 
-def player_choice_info(sheet):
-    return (f"Player {sheet.get('number')} turn.\n"
-            f"Essences {sheet.get('essences')}.\n"
-            f"Your cards:\n"
-            f"{format_deck_info(sheet.get('deck'))}.\n"
-            f"You have to choose one of two mages:\n"
-            f"{format_deck_info(sheet.get('mages'))}")
+def player_mage_choice_info(sheet):
+    print(f"Player {sheet.get('number')} turn.\n"
+          f"Essences {sheet.get('essences')}.\n"
+          f"Your cards:\n"
+          f"{format_deck_info(sheet.get('deck'))}\n"
+          f"Your mages:\n"
+          f"{format_deck_info(sheet.get('mages'))}")
 
 
 def artifacts_format_msg(component_card, num_card):
