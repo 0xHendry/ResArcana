@@ -1,14 +1,17 @@
 from src.components.components import Components
 from src.settings.settings import Settings
+from src.game.actions.actions import Actions
+from src.game.info.info import format_deck_info, player_mage_choice_info
+
 from utils import (generate_hand, generate_deck, generate_mages,
                    generate_monuments_deck, generate_places_of_power, generate_monuments, shuffle_deck)
-from info import format_deck_info, player_choice_info
 
 
 class Game(Settings):
     def __init__(self):
         super().__init__()
         self.all_components = Components().get_all_components
+        self.actions = Actions()
 
     # configure players for game session
     def configuration(self):
@@ -47,22 +50,29 @@ class Game(Settings):
             [self.game_components.get('artifacts').remove(artifact) for artifact in sheet['deck']]
             [self.game_components.get('mages').remove(artifact) for artifact in sheet['mages']]
             for essence in sheet['essences']:
-                sheet['essences'][essence] += 1
+                sheet['essences'][essence] = 1
 
-    def player_choices(self):
+    def first_phase(self):
         for sheet in self.sheets:
-            player_choice_info(sheet)
+            player_mage_choice_info(sheet)
+            self.actions.set_player_choice(sheet)
+
+    def second_phase(self):
+        # self.actions.player_first_item_choice(self.sheets[0])
+        for sheet in self.sheets:
+            pass
+            # player_item_choice_info(sheet)
+            # self.actions.player_first_item_choice(sheet)
 
     def launch(self):
-        self.player_choices()
+        self.first_phase()
+        self.second_phase()
 
     def start(self):
         self.configuration()
         self.setup_components()
         self.preparation()
         self.launch()
-
-
 
 
 if __name__ == '__main__':
