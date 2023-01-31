@@ -23,13 +23,40 @@ def format_deck_info(artifacts_deck, num_card=0):
     return result
 
 
-def player_mage_choice_info(sheet):
+# todo: Refactoring (to be changed)
+def player_mage_choice_info(sheet, monuments, places_of_power):
     print(f"Player {sheet.get('number')} turn.\n"
-          f"Essences {sheet.get('essences')}.\n"
-          f"Your cards:\n"
-          f"{format_deck_info(sheet.get('deck'))}\n"
+          f"{player_full_info(sheet, monuments, places_of_power)}.\n"
           f"Your mages:\n"
-          f"{format_deck_info(sheet.get('mages'))}")
+          f"{format_deck_info(sheet.get('mages'))}\n")
+
+
+def player_item_choice_info(sheet, monuments, places_of_power, items):
+    print(f"Player {sheet.get('number')} choose item.\n"
+          f"{player_full_info(sheet, monuments, places_of_power)}.\n"
+          f"Your mage:\n"
+          f"{sheet.get('mage')}\n"
+          f"Items:\n"
+          f"{format_deck_info(items)}\n")
+
+
+def player_full_info(sheet, monuments, places_of_power):
+    return (f"Essences:\n"
+            f"{sheet.get('essences')}.\n"
+            f"Your cards:\n"
+            f"{format_deck_info(sheet.get('deck'))}\n"
+            f"Places of power:\n"
+            f"{places_of_power}\n"
+            f"Monuments:\n"
+            f"{monuments}\n")
+
+
+def essences_info(sheet):
+    return f"Essences {sheet.get('essences')}.\n"
+
+
+def mage_info(sheet):
+    return f"{sheet.get('mage')}.\n"
 
 
 def artifacts_format_msg(component_card, num_card):
@@ -60,7 +87,7 @@ def mages_format_msg(component_card, num_card):
 
 def monuments_format_msg(component_card, num_card):
     return (f"{num_card}. Monument name - {component_card.get('name')}\n"
-            f"Cost - {'gold': 4}\n"
+            f"Cost - 'gold': 4\n"
             f"Income - {component_card.get('income')}\n"
             f"Points - {component_card.get('points')}\n"
             f"Points generating - {component_card.get('points_generating')}\n"
