@@ -1,7 +1,7 @@
 from src.components.components import Components
 from src.settings.settings import Settings
 from src.game.actions.actions import Actions
-from src.game.info.info import format_deck_info, player_mage_choice_info
+from src.game.info.info import format_deck_info, player_mage_choice_info, player_item_choice_info
 
 from utils import (generate_hand, generate_deck, generate_mages,
                    generate_monuments_deck, generate_places_of_power, generate_monuments, shuffle_deck)
@@ -54,15 +54,15 @@ class Game(Settings):
 
     def first_phase(self):
         for sheet in self.sheets:
-            player_mage_choice_info(sheet)
+            player_mage_choice_info(sheet, self.monuments, self.places_of_power)
             self.actions.set_player_choice(sheet)
 
     def second_phase(self):
-        # self.actions.player_first_item_choice(self.sheets[0])
-        for sheet in self.sheets:
-            pass
-            # player_item_choice_info(sheet)
-            # self.actions.player_first_item_choice(sheet)
+        item_choice_sheets = self.sheets[:]
+        item_choice_sheets[1:len(item_choice_sheets)] = item_choice_sheets[1:len(item_choice_sheets)][::-1]
+        for sheet in item_choice_sheets:
+            player_item_choice_info(sheet, self.monuments, self.places_of_power, self.game_components.get('items'))
+            self.actions.player_first_item_choice(sheet, self.game_components.get('items'))
 
     def launch(self):
         self.first_phase()
