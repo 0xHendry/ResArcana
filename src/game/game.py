@@ -47,26 +47,35 @@ class Game(Settings):
             sheet['number'] = player_queue
             sheet['deck'] = generate_deck(self.game_components.get('artifacts'))
             sheet['mages'] = generate_mages(self.game_components.get('mages'))
-            [self.game_components.get('artifacts').remove(artifact) for artifact in sheet['deck']]
-            [self.game_components.get('mages').remove(artifact) for artifact in sheet['mages']]
+            [self.game_components['artifacts'].remove(artifact) for artifact in sheet['deck']]
+            [self.game_components['mages'].remove(artifact) for artifact in sheet['mages']]
             for essence in sheet['essences']:
                 sheet['essences'][essence] = 1
 
     def first_phase(self):
         for sheet in self.sheets:
             player_mage_choice_info(sheet, self.monuments, self.places_of_power)
-            self.actions.set_player_choice(sheet)
+            self.actions.player_mage_choice(sheet)
 
     def second_phase(self):
-        item_choice_sheets = self.sheets[:]
-        item_choice_sheets[1:len(item_choice_sheets)] = item_choice_sheets[1:len(item_choice_sheets)][::-1]
-        for sheet in item_choice_sheets:
+        player_sheets = self.sheets[:]
+        player_sheets[1:len(player_sheets)] = player_sheets[1:len(player_sheets)][::-1]
+        for sheet in player_sheets:
+            sheet['hand'] = generate_hand(sheet['deck'])  # randomize hand from deck
+            [sheet['deck'].remove(card) for card in sheet['hand']]
             player_item_choice_info(sheet, self.monuments, self.places_of_power, self.game_components.get('items'))
-            self.actions.player_first_item_choice(sheet, self.game_components.get('items'))
+            shuffle_deck(sheet['deck'])
+            self.actions.player_item_choice(sheet, self.game_components.get('items'))  # choose item
+
+    def third_phase(self):
+        for sheet in self.sheets:
+            # add income and start playing
+            pass
 
     def launch(self):
         self.first_phase()
         self.second_phase()
+        self.third_phase()
 
     def start(self):
         self.configuration()

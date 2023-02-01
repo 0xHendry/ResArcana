@@ -10,7 +10,7 @@ class Actions:
         self.item_choice = None
 
     # todo: Add help for choices
-    def set_player_choice(self, sheet):
+    def player_mage_choice(self, sheet):
         while self.mage_choice is None:
             try:
                 self.mage_choice = int(input(f'{sheet.get("name")}, you have to choose one of two mages,'
@@ -24,7 +24,7 @@ class Actions:
                 print('Please enter the correct number.')
         self.reset_player_choice()
 
-    def player_first_item_choice(self, sheet, items):
+    def player_item_choice(self, sheet, items):
         while self.item_choice is None:
             try:
                 self.item_choice = int(input(f'{sheet.get("name")}, you have to choose an item'
@@ -37,3 +37,8 @@ class Actions:
             except ValueError:
                 print('Please enter the correct number.')
         self.reset_item_choice()
+
+    @staticmethod
+    def player_item_fold(sheet, items):
+        items.append(sheet['item'])
+        del sheet['item']

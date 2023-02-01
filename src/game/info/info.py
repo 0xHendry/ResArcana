@@ -23,7 +23,7 @@ def format_deck_info(artifacts_deck, num_card=0):
     return result
 
 
-# todo: Refactoring (to be changed)
+# todo: Refactoring (to be changed), after starting phase 2 hide deck
 def player_mage_choice_info(sheet, monuments, places_of_power):
     print(f"Player {sheet.get('number')} turn.\n"
           f"{player_full_info(sheet, monuments, places_of_power)}.\n"
