@@ -2,6 +2,7 @@ class Actions:
     def __init__(self):
         self.mage_choice = None
         self.item_choice = None
+        self.income_pool = ('artifacts', 'monuments', 'places of power', 'item', 'mage')
 
     def reset_player_choice(self):
         self.mage_choice = None
@@ -37,6 +38,22 @@ class Actions:
             except ValueError:
                 print('Please enter the correct number.')
         self.reset_item_choice()
+
+    def auto_income(self, sheet):
+        for key, value in sheet.items():
+            if key in self.income_pool:
+                if sheet[key].get('income', {}).get('choice'):
+                    print(f'You need choose one essence from income ability for {sheet[key]} {sheet.get("name")}')
+
+        pass
+
+    @staticmethod
+    def any_income():
+        pass
+
+    @staticmethod
+    def choice_income():
+        pass
 
     @staticmethod
     def player_item_fold(sheet, items):

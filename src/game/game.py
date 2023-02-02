@@ -1,7 +1,7 @@
 from src.components.components import Components
 from src.settings.settings import Settings
 from src.game.actions.actions import Actions
-from src.game.info.info import format_deck_info, player_mage_choice_info, player_item_choice_info
+from src.game.info.info import player_mage_choice_info, player_item_choice_info
 
 from utils import (generate_hand, generate_deck, generate_mages,
                    generate_monuments_deck, generate_places_of_power, generate_monuments, shuffle_deck)
@@ -50,25 +50,28 @@ class Game(Settings):
             [self.game_components['artifacts'].remove(artifact) for artifact in sheet['deck']]
             [self.game_components['mages'].remove(artifact) for artifact in sheet['mages']]
             for essence in sheet['essences']:
-                sheet['essences'][essence] = 1
+                sheet['essences'][essence] = 1  # set all start essences on 1
 
     def first_phase(self):
         for sheet in self.sheets:
-            player_mage_choice_info(sheet, self.monuments, self.places_of_power)
-            self.actions.player_mage_choice(sheet)
+            player_mage_choice_info(sheet, self.monuments, self.places_of_power)  # show current player game information
+            self.actions.player_mage_choice(sheet)  # player choose mage
 
     def second_phase(self):
         player_sheets = self.sheets[:]
-        player_sheets[1:len(player_sheets)] = player_sheets[1:len(player_sheets)][::-1]
+        player_sheets[1:len(player_sheets)] = player_sheets[1:len(player_sheets)][::-1]  # change order on item choice
         for sheet in player_sheets:
-            sheet['hand'] = generate_hand(sheet['deck'])  # randomize hand from deck
-            [sheet['deck'].remove(card) for card in sheet['hand']]
+            sheet['hand'] = generate_hand(sheet['deck'])  # randomize player hand from deck
+            [sheet['deck'].remove(card) for card in sheet['hand']]  # remove player cards which received in hand
             player_item_choice_info(sheet, self.monuments, self.places_of_power, self.game_components.get('items'))
-            shuffle_deck(sheet['deck'])
+            shuffle_deck(sheet['deck'])  # shuffle deck
             self.actions.player_item_choice(sheet, self.game_components.get('items'))  # choose item
+        self.sheets = sorted(player_sheets, key=lambda x: x['number'])  # return correct players order
 
     def third_phase(self):
         for sheet in self.sheets:
+            print(sheet)
+            self.actions.auto_income(sheet)
             # add income and start playing
             pass
 
