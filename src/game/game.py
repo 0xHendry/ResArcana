@@ -70,7 +70,6 @@ class Game(Settings):
 
     def third_phase(self):
         for sheet in self.sheets:
-            print(sheet)
             self.actions.auto_income(sheet)
             # add income and start playing
             pass
