@@ -2,7 +2,8 @@ class Actions:
     def __init__(self):
         self.mage_choice = None
         self.item_choice = None
-        self.income_pool = ('artifacts', 'monuments', 'places of power', 'item', 'mage')
+        self.income_cards = ('artifacts', 'monuments', 'places of power')
+        self.income_pool = ('item', 'mage')
 
     def reset_player_choice(self):
         self.mage_choice = None
@@ -41,11 +42,15 @@ class Actions:
 
     def auto_income(self, sheet):
         for key, value in sheet.items():
-            if key in self.income_pool:
-                if sheet[key].get('income', {}).get('choice'):
-                    print(f'You need choose one essence from income ability for {sheet[key]} {sheet.get("name")}')
+            if key in self.income_cards and isinstance(value, list):
+                self.income_from_cards(sheet, value)
+                # if value.get('income').get('choice'):
+                #     print(f'You need choose one essence from income ability for {key} {sheet[key].get("name")}')
 
         pass
+
+    def income_from_cards(self, sheet, cards):
+        return
 
     @staticmethod
     def any_income():
