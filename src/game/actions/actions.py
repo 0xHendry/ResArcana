@@ -62,4 +62,4 @@ class Actions:
     @staticmethod
     def player_item_fold(sheet, items):
         items.extend(sheet['item'])
-        del sheet['item']
+        sheet['item'].clear()
