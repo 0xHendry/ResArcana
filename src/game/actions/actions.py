@@ -39,16 +39,20 @@ class Actions:
                 print('Please enter the correct number.')
         self.reset_item_choice()
 
-    def auto_income(self, sheet):
+    def get_income(self, sheet):
         for key, value in sheet.items():
             if key in self.income_cards and isinstance(value, list):
-                self.income_from_cards(sheet, value)
+                self.income_from_cards(sheet.get('essences'), value)
                 # if value.get('income').get('choice'):
                 #     print(f'You need choose one essence from income ability for {key} {sheet[key].get("name")}')
 
         pass
 
-    def income_from_cards(self, sheet, cards):
+    def income_from_cards(self, sheet, cards_pack):
+        choices = []
+        auto_income_cards = []
+        [choices.append(card['income']) if isinstance(card.get('income'), dict) and card.get('income').get('choice')
+         else auto_income_cards.append(card['income']) for card in cards_pack]
         return
 
     @staticmethod
@@ -63,3 +67,4 @@ class Actions:
     def player_item_fold(sheet, items):
         items.extend(sheet['item'])
         sheet['item'].clear()
+
