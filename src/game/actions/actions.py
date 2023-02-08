@@ -40,6 +40,7 @@ class Actions:
         self.reset_item_choice()
 
     def get_income(self, sheet):
+        print(f'Turn {sheet.get("name")} income stage')
         for key, value in sheet.items():
             if key in self.income_cards and value and isinstance(value, list):
                 self.income_from_cards(sheet.get('essences'), value)
@@ -49,16 +50,32 @@ class Actions:
         pass
 
     def income_from_cards(self, essences, cards_pack):
+        essence_choices = []
+        any_choices = []
 
+        for card in cards_pack:
+            if isinstance(card.get('income'), dict):
+                income = card.get('income')
+                if income.get('choice'):
+                    essence_choices.append(card)  # another check any check
+                elif income.get('any'):
+                    any_choices.append(card)
+                else:
+                    for essence, value in income.items():
+                        print(f"Added essence '{essence}' count {value} from {card.get('type')} - {card.get('name')}")
+                        essences[essence] = essences.get(essence, 0) + value
+
+        [self.choice_income(essences, card) for card in essence_choices]
+        [self.any_income(essences, card) for card in any_choices]
 
         return
 
     @staticmethod
-    def any_income():
+    def any_income(essences, card):
         pass
 
-    @staticmethod
-    def choice_income():
+    def choice_income(self, essences, card):
+        # income_choice = int(input(""))
         pass
 
     @staticmethod
