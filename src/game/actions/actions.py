@@ -52,31 +52,43 @@ class Actions:
     def income_from_cards(self, essences, cards_pack):
         essence_choices = []
         any_choices = []
-
         for card in cards_pack:
             if isinstance(card.get('income'), dict):
                 income = card.get('income')
                 if income.get('choice'):
+                    income.pop('choice')
                     essence_choices.append(card)  # another check any check
                 elif income.get('any'):
                     any_choices.append(card)
                 else:
                     for essence, value in income.items():
-                        print(f"Added essence '{essence}' count {value} from {card.get('type')} - {card.get('name')}")
+                        print(f"Added {value} '{essence}' from {card.get('type')} - {card.get('name')}")
                         essences[essence] = essences.get(essence, 0) + value
-
         [self.choice_income(essences, card) for card in essence_choices]
         [self.any_income(essences, card) for card in any_choices]
 
-        return
 
     @staticmethod
     def any_income(essences, card):
         pass
 
-    def choice_income(self, essences, card):
-        # income_choice = int(input(""))
-        pass
+    def choice_income(self, essences, card):  # any?
+        choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
+        income = card.get('income')
+        for number, income_info in enumerate(income.items()):
+            choice_msg += f'{number+1}. {income_info[0]} +{income_info[1]}\n'
+        choice = None
+        while choice is None:
+            try:
+                choice = int(input(choice_msg))
+                if choice in (1, 2):
+                    chosen_key, value = list(card.get('income').items())[choice-1]
+                    essences[chosen_key] = essences.get(chosen_key, 0) + value
+                    print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}")
+                else:
+                    choice = None
+            except ValueError:
+                print('Please enter the correct number for choose')
 
     @staticmethod
     def player_item_fold(sheet, items):
