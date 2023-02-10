@@ -1,26 +1,27 @@
 def format_deck_info(artifacts_deck, num_card=0):
-    component_type = artifacts_deck[0].get('type')
-    result = f"{component_type}s:\n" \
-             f"------------------------------------\n"
-    match component_type:
-        case "Artifact":
-            format_case = artifacts_format_msg
-        case "Item":
-            format_case = items_format_msg
-        case "Mage":
-            format_case = mages_format_msg
-        case "Monument":
-            format_case = monuments_format_msg
-        case "Place of power":
-            format_case = places_of_power_format_msg
-        case "Scroll":
-            format_case = scroll_format_msg
-        case _:
-            return
-    for card in artifacts_deck:
-        num_card += 1
-        result += format_case(card, num_card)
-    return result
+    if artifacts_deck and isinstance(artifacts_deck, list):
+        component_type = artifacts_deck[0].get('type')
+        result = f"{component_type}s:\n" \
+                 f"------------------------------------\n"
+        match component_type:
+            case "Artifact":
+                format_case = artifacts_format_msg
+            case "Item":
+                format_case = items_format_msg
+            case "Mage":
+                format_case = mages_format_msg
+            case "Monument":
+                format_case = monuments_format_msg
+            case "Place of power":
+                format_case = places_of_power_format_msg
+            case "Scroll":
+                format_case = scroll_format_msg
+            case _:
+                return
+        for card in artifacts_deck:
+            num_card += 1
+            result += format_case(card, num_card)
+        return result
 
 
 # todo: Formatting
@@ -71,6 +72,7 @@ def player_full_info(sheet, monuments, places_of_power):
             f"{sheet.get('essences')}.\n"
             f"Your cards:\n"
             f"{format_deck_info(sheet.get('deck'))}\n"
+            f"{format_deck_info(sheet.get('hand'))}\n"
             f"Places of power:\n"
             f"{places_of_power}\n"
             f"Monuments:\n"
