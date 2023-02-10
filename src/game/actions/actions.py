@@ -2,6 +2,7 @@ class Actions:
     def __init__(self):
         self.mage_choice = None
         self.item_choice = None
+        self.essences = ('calm', 'death', 'elan', 'life', 'gold', 'pearl')
         self.income_cards = ('artifacts', 'monuments', 'places of power', 'item', 'mage')
 
     def reset_player_choice(self):
@@ -67,9 +68,13 @@ class Actions:
         [self.choice_income(essences, card) for card in essence_choices]
         [self.any_income(essences, card) for card in any_choices]
 
-
-    @staticmethod
-    def any_income(essences, card):
+    def any_income(self, essences, card):
+        print(f'You need to choose any essence from {card.get("type")} - {card.get("name")}\n')
+        income = card.get('income')
+        essence_types = (set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
+        any_msg = ''
+        for number, essence in enumerate(essence_types):
+            any_msg += f'{number+1}. {essence}\n'
         pass
 
     def choice_income(self, essences, card):  # any?
