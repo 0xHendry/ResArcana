@@ -45,10 +45,6 @@ class Actions:
         for key, value in sheet.items():
             if key in self.income_cards and value and isinstance(value, list):
                 self.income_from_cards(sheet.get('essences'), value)
-                # if value.get('income').get('choice'):
-                #     print(f'You need choose one essence from income ability for {key} {sheet[key].get("name")}')
-
-        pass
 
     def income_from_cards(self, essences, cards_pack):
         essence_choices = []
@@ -75,7 +71,18 @@ class Actions:
         any_msg = ''
         for number, essence in enumerate(essence_types):
             any_msg += f'{number+1}. {essence}\n'
-        pass
+        choice = None
+        while choice is None:  # todo: Add approach and count choices to select not a one essence
+            try:
+                choice = int(input(any_msg))
+                if choice in range(1, len(essence_types)):
+                    chosen_key, value = list(card.get('income').items())[choice-1]
+                    essences[chosen_key] = essences.get(chosen_key, 0) + value
+                    print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}")
+                else:
+                    choice = None
+            except ValueError:
+                print('Please enter the correct number for choose')
 
     def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
