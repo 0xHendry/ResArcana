@@ -1,4 +1,3 @@
-# todo: Should be changed
 def format_deck_info(artifacts_deck, num_card=0):
     if artifacts_deck and isinstance(artifacts_deck, list):
         component_type = artifacts_deck[0].get('type')

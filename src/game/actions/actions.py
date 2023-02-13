@@ -71,7 +71,6 @@ class Actions:
         any_msg = ''
         for number, essence in enumerate(essence_types):
             any_msg += f'{number+1}. {essence}\n'
-        
 
     def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
