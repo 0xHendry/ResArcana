@@ -70,19 +70,32 @@ class Actions:
         essence_types = (set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
         any_msg = ''
         for number, essence in enumerate(essence_types):
-            any_msg += f'{number+1}. {essence}\n'
+            any_msg += f'{number + 1}. {essence}\n'
+        for essence_number in range(income.get('any')):
+            choice = None
+            while choice is None:
+                try:
+                    choice = int(input(any_msg))
+                    if choice in enumerate(essence_types):
+
+                        print(f"Your choice is {essence_types[choice]}.\n"
+                              f" Remaining essences {income.get('any') - essence_number} to choose from any income.\n")
+                    else:
+                        choice = None
+                except ValueError:
+                    print('Please enter the correct number for choose')
 
     def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
         for number, income_info in enumerate(income.items()):
-            choice_msg += f'{number+1}. {income_info[0]} +{income_info[1]}\n'
+            choice_msg += f'{number + 1}. {income_info[0]} +{income_info[1]}\n'
         choice = None
         while choice is None:
             try:
                 choice = int(input(choice_msg))
                 if choice in (1, 2):
-                    chosen_key, value = list(card.get('income').items())[choice-1]
+                    chosen_key, value = list(card.get('income').items())[choice - 1]
                     essences[chosen_key] = essences.get(chosen_key, 0) + value
                     print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}")
                 else:
