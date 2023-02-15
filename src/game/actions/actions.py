@@ -41,7 +41,8 @@ class Actions:
         self.reset_item_choice()
 
     def get_income(self, sheet):
-        print(f'Turn {sheet.get("name")} income stage')
+        print('-----------------------------------------')
+        print(f'Player {sheet.get("name")} income stage')
         for key, value in sheet.items():
             if key in self.income_cards and value and isinstance(value, list):
                 self.income_from_cards(sheet.get('essences'), value)
@@ -65,21 +66,26 @@ class Actions:
         [self.any_income(essences, card) for card in any_choices]
 
     def any_income(self, essences, card):
-        print(f'You need to choose any essence from {card.get("type")} - {card.get("name")}\n')
         income = card.get('income')
-        essence_types = (set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
+        essence_types = tuple(set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
+        essence_count = income.get("any")
+        print(f'You need to choose {essence_count} any essence(s) from {card.get("type")} - {card.get("name")}\n')
         any_msg = ''
         for number, essence in enumerate(essence_types):
             any_msg += f'{number + 1}. {essence}\n'
-        for essence_number in range(income.get('any')):
+        for essence_num in range(essence_count):
             choice = None
             while choice is None:
                 try:
                     choice = int(input(any_msg))
-                    if choice in enumerate(essence_types):
-
-                        print(f"Your choice is {essence_types[choice]}.\n"
-                              f" Remaining essences {income.get('any') - essence_number} to choose from any income.\n")
+                    if choice in range(1, len(essence_types)):
+                        chosen_key, value = essence_types[choice-1], 1
+                        essences[chosen_key] = essences.get(chosen_key, 0) + value
+                        remaining_essences = int(essence_count) - (essence_num+1)
+                        if remaining_essences > 0:
+                            print(f"Remaining essences {remaining_essences} to choose from any income.\n")
+                        print(f"Your choice is {essence_types[choice-1]}.\n"
+                              f"Your essences {essences}")
                     else:
                         choice = None
                 except ValueError:
