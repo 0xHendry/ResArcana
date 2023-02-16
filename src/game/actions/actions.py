@@ -65,7 +65,7 @@ class Actions:
         [self.choice_income(essences, card) for card in essence_choices]
         [self.any_income(essences, card) for card in any_choices]
 
-    def any_income(self, essences, card):
+    def any_income(self, essences, card):  # essence bug
         income = card.get('income')
         essence_types = tuple(set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
         essence_count = income.get("any")
