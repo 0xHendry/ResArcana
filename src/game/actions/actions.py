@@ -65,7 +65,7 @@ class Actions:
         [self.choice_income(essences, card) for card in essence_choices]
         [self.any_income(essences, card) for card in any_choices]
 
-    def any_income(self, essences, card):  # essence bug
+    def any_income(self, essences, card):
         income = card.get('income')
         essence_types = tuple(set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
         essence_count = income.get("any")
@@ -91,7 +91,8 @@ class Actions:
                 except ValueError:
                     print('Please enter the correct number for choose')
 
-    def choice_income(self, essences, card):  # any?
+    @staticmethod
+    def choice_income(essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
         for number, income_info in enumerate(income.items()):
