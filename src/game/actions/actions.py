@@ -91,8 +91,7 @@ class Actions:
                 except ValueError:
                     print('Please enter the correct number for choose')
 
-    @staticmethod
-    def choice_income(essences, card):  # any?
+    def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
         for number, income_info in enumerate(income.items()):
@@ -104,7 +103,8 @@ class Actions:
                 if choice in (1, 2):
                     chosen_key, value = list(card.get('income').items())[choice - 1]
                     essences[chosen_key] = essences.get(chosen_key, 0) + value
-                    print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}")
+                    print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}.\n"
+                          f"Your essences {essences}")
                 else:
                     choice = None
             except ValueError:
