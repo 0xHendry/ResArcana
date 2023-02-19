@@ -91,6 +91,7 @@ class Actions:
                 except ValueError:
                     print('Please enter the correct number for choose')
 
+    # todo: special cases (Vault, Endless Knot, Windup Man)
     def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
