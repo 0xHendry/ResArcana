@@ -79,12 +79,12 @@ class Actions:
                 try:
                     choice = int(input(any_msg))
                     if choice in range(1, len(essence_types)):
-                        chosen_key, value = essence_types[choice-1], 1
+                        chosen_key, value = essence_types[choice - 1], 1
                         essences[chosen_key] = essences.get(chosen_key, 0) + value
-                        remaining_essences = int(essence_count) - (essence_num+1)
+                        remaining_essences = int(essence_count) - (essence_num + 1)
                         if remaining_essences > 0:
                             print(f"Remaining essences {remaining_essences} to choose from any income.\n")
-                        print(f"Your choice is {essence_types[choice-1]}.\n"
+                        print(f"Your choice is {essence_types[choice - 1]}.\n"
                               f"Your essences {essences}")
                     else:
                         choice = None
@@ -115,3 +115,33 @@ class Actions:
     def player_item_fold(sheet, items):
         items.extend(sheet['item'])
         sheet['item'].clear()
+
+
+if __name__ == '__main__':
+    case1 = {"income": {
+        "any": 2,
+        "except": [
+            "gold",
+            "pearl"
+        ],
+        "hold": "gold"
+    }}
+    case2 = {"income": {
+        "any": 2,
+        "gold": 1,
+        "choice": True,
+        "except": [
+            "gold",
+            "pearl"
+        ],
+        "hold": "pearl"
+    }}
+    case3 = {"income": {
+        "any": 2,
+        "except": [
+            "gold",
+            "pearl"
+        ],
+        "hold": "any",
+        "summation": "true"
+    }}
