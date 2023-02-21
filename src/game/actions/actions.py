@@ -115,33 +115,3 @@ class Actions:
     def player_item_fold(sheet, items):
         items.extend(sheet['item'])
         sheet['item'].clear()
-
-
-if __name__ == '__main__':
-    case1 = {"income": {
-        "any": 2,
-        "except": [
-            "gold",
-            "pearl"
-        ],
-        "hold": "gold"
-    }}
-    case2 = {"income": {
-        "any": 2,
-        "gold": 1,
-        "choice": True,
-        "except": [
-            "gold",
-            "pearl"
-        ],
-        "hold": "pearl"
-    }}
-    case3 = {"income": {
-        "any": 2,
-        "except": [
-            "gold",
-            "pearl"
-        ],
-        "hold": "any",
-        "summation": "true"
-    }}
