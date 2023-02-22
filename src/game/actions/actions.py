@@ -55,7 +55,7 @@ class Actions:
                 income = card.get('income')
                 if income.get('choice'):
                     income.pop('choice')
-                    essence_choices.append(card)  # another check any check
+                    essence_choices.append(card)
                 elif income.get('any'):
                     any_choices.append(card)
                 else:
@@ -91,7 +91,6 @@ class Actions:
                 except ValueError:
                     print('Please enter the correct number for choose')
 
-    # todo: special cases (Vault, Endless Knot, Windup Man)
     def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
