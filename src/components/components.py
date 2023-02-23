@@ -54,8 +54,3 @@ class Components:
 
     def get_sheet(self, expansions):
         return self.sheets.find_one({'expansion': expansions[0]}, {'_id': 0, 'expansion': 0})
-
-
-if __name__ == '__main__':
-    a = Components().get_all_components(("Base", "LAT", "PI"))
-    print(a)
