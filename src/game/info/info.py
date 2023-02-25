@@ -24,28 +24,6 @@ def format_deck_info(artifacts_deck, num_card=0):
         return result
 
 
-# todo: Formatting
-# def player_info(player_sheet, word):
-#     print('Enter one word artifacts/item/hand/mage/discard/places/scrolls/all')
-#     match word:
-#         case "artifact":
-#             print('Artifact')
-#         case "item":
-#             print('Item')
-#         case "hand":
-#             print('Hand')
-#         case "mage":
-#             print('Mage')
-#         case "discard":
-#             print('Discard')
-#         case "places":
-#             print('Places')
-#         case "scrolls":
-#             print('Scrolls')
-#         case "all":
-#             print('All')
-
-
 def rival_info(rivals_sheets, word):
     print('Enter one word artifacts/item/hand/mage/discard/places/scrolls/all')
 
