@@ -50,10 +50,13 @@ class Actions:
     def income_from_cards(self, essences, cards_pack):
         essence_choices = []
         any_choices = []
+        hold_choices = []
         for card in cards_pack:
             if isinstance(card.get('income'), dict):
                 income = card.get('income')
-                if income.get('choice'):
+                if income.get('hold'):
+                    hold_choices.append(card)
+                elif income.get('choice'):
                     income.pop('choice')
                     essence_choices.append(card)
                 elif income.get('any'):
@@ -62,8 +65,25 @@ class Actions:
                     for essence, value in income.items():
                         print(f"Added {value} '{essence}' from {card.get('type')} - {card.get('name')}")
                         essences[essence] = essences.get(essence, 0) + value
+        [self.hold_income(essences, card) for card in hold_choices]
         [self.choice_income(essences, card) for card in essence_choices]
         [self.any_income(essences, card) for card in any_choices]
+
+    # add get income from on_card
+    def hold_income(self, essences, card):
+        income = card.get('income')
+        if card.get('on_card', {}).get(income.get('hold')):
+            if income.get('summation'):
+                self.summation_income(card)
+            elif income.get('choice'):
+                self.choice_income(essences, card)
+            elif income.get('any'):
+                self.any_income(essences, card)
+
+    @staticmethod
+    def summation_income(card):
+        for essence, value in card.get('on_card'):
+            value += 2
 
     def any_income(self, essences, card):
         income = card.get('income')
@@ -114,3 +134,27 @@ class Actions:
     def player_item_fold(sheet, items):
         items.extend(sheet['item'])
         sheet['item'].clear()
+
+
+if __name__ == '__main__':
+    case = {"income": {
+        "any": 2,
+        "gold": 1,
+        "choice": True,
+        "except": [
+            "gold",
+            "pearl"
+        ],
+        "hold": "pearl"
+    }}
+
+    sheet1 = {'name': 'D', 'number': 5, 'points': 0,
+              'artifacts': [{'name': 'Earth Dragon', 'type': 'Artifact', 'archetype': 'Dragon', 'points': 1,
+                             'cost': {'elan': 4, 'life': 3}, "income": case, 'option': {'name': 'Attack', 'value': 2,
+                                                                                        'except': {'gold': 1},
+                                                                                        'reusable': False},
+                             'option2': None, 'on_card': {"pearl": 1}}],
+              'essences': {'calm': 1, 'death': 1, 'elan': 1, 'life': 1, 'gold': 1, 'pearl': 1},
+              'monuments': [], 'places of power': []}
+
+    a = Actions().get_income(sheet1)
