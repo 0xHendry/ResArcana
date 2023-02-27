@@ -4,6 +4,7 @@ class Actions:
         self.item_choice = None
         self.essences = ('calm', 'death', 'elan', 'life', 'gold', 'pearl')
         self.income_cards = ('artifacts', 'monuments', 'places of power', 'item', 'mage')
+        self.any_essence = 'any'
 
     def reset_player_choice(self):
         self.mage_choice = None
@@ -40,12 +41,15 @@ class Actions:
                 print('Please enter the correct number.')
         self.reset_item_choice()
 
-    def get_income(self, sheet):
+    def get_player_essences_after_income(self, sheet):
         print('-----------------------------------------')
         print(f'Player {sheet.get("name")} income stage')
+        print(f'Your current essences - {sheet.get("essences")}')
+        player_essences = sheet.get('essences').copy()
         for key, value in sheet.items():
             if key in self.income_cards and value and isinstance(value, list):
-                self.income_from_cards(sheet.get('essences'), value)
+                self.income_from_cards(player_essences, value)
+        return player_essences
 
     def income_from_cards(self, essences, cards_pack):
         essence_choices = []
@@ -68,6 +72,7 @@ class Actions:
         [self.hold_income(essences, card) for card in hold_choices]
         [self.choice_income(essences, card) for card in essence_choices]
         [self.any_income(essences, card) for card in any_choices]
+        return essences
 
     # add get income from on_card
     def hold_income(self, essences, card):
@@ -88,8 +93,8 @@ class Actions:
     def any_income(self, essences, card):
         income = card.get('income')
         essence_types = tuple(set(self.essences) - set(income.get('except')) if income.get('except') else self.essences)
-        essence_count = income.get("any")
-        print(f'You need to choose {essence_count} any essence(s) from {card.get("type")} - {card.get("name")}\n')
+        essence_count = income.get(self.any_essence)
+        print(f'You need to choose {essence_count} any essence(s) from {card.get("type")} - {card.get("name")}')
         any_msg = ''
         for number, essence in enumerate(essence_types):
             any_msg += f'{number + 1}. {essence}\n'
@@ -105,7 +110,7 @@ class Actions:
                         if remaining_essences > 0:
                             print(f"Remaining essences {remaining_essences} to choose from any income.\n")
                         print(f"Your choice is {essence_types[choice - 1]}.\n"
-                              f"Your essences {essences}")
+                              f"Your current essences - {essences}")
                     else:
                         choice = None
                 except ValueError:
@@ -114,17 +119,22 @@ class Actions:
     def choice_income(self, essences, card):  # any?
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
+        essence_types = self.essences + (self.any_essence,)
         for number, income_info in enumerate(income.items()):
-            choice_msg += f'{number + 1}. {income_info[0]} +{income_info[1]}\n'
+            if income_info[0] in essence_types:
+                choice_msg += f'{number + 1}. {income_info[0]} +{income_info[1]}\n'
         choice = None
         while choice is None:
             try:
                 choice = int(input(choice_msg))
                 if choice in (1, 2):
                     chosen_key, value = list(card.get('income').items())[choice - 1]
-                    essences[chosen_key] = essences.get(chosen_key, 0) + value
-                    print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}.\n"
-                          f"Your essences {essences}")
+                    if chosen_key == self.any_essence:
+                        self.any_income(essences, card)
+                    else:
+                        essences[chosen_key] = essences.get(chosen_key, 0) + value
+                        print(f"Added {value} '{chosen_key}' from {card.get('type')} - {card.get('name')}.\n"
+                              f"Your essences {essences}")
                 else:
                     choice = None
             except ValueError:
@@ -134,27 +144,3 @@ class Actions:
     def player_item_fold(sheet, items):
         items.extend(sheet['item'])
         sheet['item'].clear()
-
-
-if __name__ == '__main__':
-    case = {"income": {
-        "any": 2,
-        "gold": 1,
-        "choice": True,
-        "except": [
-            "gold",
-            "pearl"
-        ],
-        "hold": "pearl"
-    }}
-
-    sheet1 = {'name': 'D', 'number': 5, 'points': 0,
-              'artifacts': [{'name': 'Earth Dragon', 'type': 'Artifact', 'archetype': 'Dragon', 'points': 1,
-                             'cost': {'elan': 4, 'life': 3}, "income": case, 'option': {'name': 'Attack', 'value': 2,
-                                                                                        'except': {'gold': 1},
-                                                                                        'reusable': False},
-                             'option2': None, 'on_card': {"pearl": 1}}],
-              'essences': {'calm': 1, 'death': 1, 'elan': 1, 'life': 1, 'gold': 1, 'pearl': 1},
-              'monuments': [], 'places of power': []}
-
-    a = Actions().get_income(sheet1)
