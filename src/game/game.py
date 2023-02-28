@@ -66,10 +66,11 @@ class Game(Settings):
             player_item_choice_info(sheet, self.monuments, self.places_of_power, self.game_components.get('items'))
             shuffle_deck(sheet['deck'])  # shuffle deck
             self.actions.player_item_choice(sheet, self.game_components.get('items'))  # choose item
-        self.sheets = sorted(player_sheets, key=lambda x: x['number'])  # return correct players order
+        self.sheets = sorted(player_sheets, key=lambda x: x['number'])  # returned correct players order
 
     def third_phase(self):
         for sheet in self.sheets:
+            self.actions.get_player_essences_from_card_hold(sheet)
             sheet['essences'] = self.actions.get_player_essences_after_income(sheet)
             # add income and start playing
             pass

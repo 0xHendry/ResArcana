@@ -116,7 +116,7 @@ class Actions:
                 except ValueError:
                     print('Please enter the correct number for choose')
 
-    def choice_income(self, essences, card):  # any?
+    def choice_income(self, essences, card):
         choice_msg = f'You need to choose income from {card.get("type")} - {card.get("name")}\n'
         income = card.get('income')
         essence_types = self.essences + (self.any_essence,)
@@ -139,6 +139,9 @@ class Actions:
                     choice = None
             except ValueError:
                 print('Please enter the correct number for choose')
+
+    def get_player_essences_from_card_hold(self, sheet):
+        pass
 
     @staticmethod
     def player_item_fold(sheet, items):
