@@ -12,7 +12,7 @@ class Actions:
     def reset_item_choice(self):
         self.item_choice = None
 
-    # todo: Add help for choices
+    # todo: Add "show deck" help for choices
     def player_mage_choice(self, sheet):
         while self.mage_choice is None:
             try:
@@ -25,7 +25,7 @@ class Actions:
                     self.reset_player_choice()
             except ValueError:
                 print('Please enter the correct number.')
-        self.reset_player_choice()
+        self.reset_player_choice()  # ?
 
     def player_item_choice(self, sheet, items):
         while self.item_choice is None:
@@ -86,7 +86,7 @@ class Actions:
                 self.any_income(essences, card)
 
     @staticmethod
-    def summation_income(card):
+    def summation_income(card):  # windup man mechanics
         for essence, value in card.get('on_card'):
             value += 2
 
