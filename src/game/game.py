@@ -16,8 +16,11 @@ class Game(Settings):
     # configure players for game session
     def configuration(self):
         while self.settings_mode is None:
-            self.settings_mode = input(self.settings_msg['description'])
-            self.set_mode(self.settings_mode)
+            self.settings_mode = input(self.settings_msg['expansions'])
+            self.set_expansion(self.settings_mode)
+        while self.game_mode is None:
+            self.game_mode = input(self.settings_msg['modes'])
+            self.set_mode(self.game_mode)
         while self.players_count is None:
             try:
                 self.players_count = int(input(self.settings_msg['players']))
@@ -40,18 +43,23 @@ class Game(Settings):
 
     # prepare deck for every player
     def preparation(self):
-        shuffle_deck(self.sheets)
-        player_queue = 0
-        for sheet in self.sheets:
-            player_queue += 1
-            sheet['number'] = player_queue
-            sheet['deck'] = generate_deck(self.game_components.get('artifacts'))
-            sheet['mages'] = generate_mages(self.game_components.get('mages'))
-            [self.game_components['artifacts'].remove(artifact) for artifact in sheet['deck']]
-            [self.game_components['mages'].remove(artifact) for artifact in sheet['mages']]
-            for essence in sheet['essences']:
-                sheet['essences'][essence] = 1  # set all start essences on 1
+        match self.game_mode:
+            case 'Random':
+                shuffle_deck(self.sheets)
+                player_queue = 0
+                for sheet in self.sheets:
+                    player_queue += 1
+                    sheet['number'] = player_queue
+                    sheet['deck'] = generate_deck(self.game_components.get('artifacts'))
+                    sheet['mages'] = generate_mages(self.game_components.get('mages'))
+                    [self.game_components['artifacts'].remove(artifact) for artifact in sheet['deck']]
+                    [self.game_components['mages'].remove(artifact) for artifact in sheet['mages']]
+                    for essence in sheet['essences']:
+                        sheet['essences'][essence] = 1  # set all start essences on 1
+            case 'Draft':
+                pass
 
+    # todo: Bound mages options with cards or choose mage after we can check all cards (replace with 2nd phase)
     def first_phase(self):
         for sheet in self.sheets:
             player_mage_choice_info(sheet, self.monuments, self.places_of_power)  # show current player game information
